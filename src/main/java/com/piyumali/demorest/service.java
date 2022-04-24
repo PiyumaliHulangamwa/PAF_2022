@@ -1,0 +1,218 @@
+package com.piyumali.demorest;
+
+
+	import java.sql.Connection;
+	import java.sql.PreparedStatement;
+	import java.sql.ResultSet;
+	import java.sql.Statement;
+	import java.util.ArrayList;
+	import java.util.List;
+	import jakarta.ws.rs.core.Response;
+
+	public class service {
+
+	  private DBconnection connection = new DBconnection();
+
+	// Add Bill
+
+	  public Response register(model billmodel) {
+	    try {
+	      Connection con = connection.getConnection();
+	      if (con == null) return Response
+	        .status(Response.Status.INTERNAL_SERVER_ERROR)
+	        .entity("Database connectivity Error")
+	        .build();
+
+	      String query = "INSERT INTO power(name, district, units, dues, date) VALUES (?, ?, ?, ?, ?)";
+	      PreparedStatement preparedStmt = con.prepareStatement(query);
+
+	      preparedStmt.setString(1, billmodel.getname());
+	      preparedStmt.setString(2, billmodel.getdistrict());
+	      preparedStmt.setString(3, billmodel.getunits());
+	      preparedStmt.setString(4, billmodel.getdues());
+	      preparedStmt.setString(5, billmodel.getdate());
+	      
+	      preparedStmt.execute();
+	      con.close();
+	      
+	      billmodel.setdues("A few seconds ago");
+	    } catch (Exception e) {
+	      return Response
+	        .status(Response.Status.INTERNAL_SERVER_ERROR)
+	        .entity("Error when inserting bill")
+	        .build();
+	    }
+	    return Response
+	      .status(Response.Status.CREATED)
+	      .entity(billmodel)
+	      .build();
+	  
+	}
+
+	// Get All Bills
+
+	public Response getAllbills() {
+	    List <model> billmodel = new ArrayList <model> ();
+
+	    try {
+	      Connection con = connection.getConnection();
+	      if (con == null) return Response
+	        .status(Response.Status.INTERNAL_SERVER_ERROR)
+	        .entity("Database connectivity Error")
+	        .build();
+
+	      String query = "select * from power";
+	      Statement stmt = con.createStatement();
+	      ResultSet rs = stmt.executeQuery(query);
+
+	      while (rs.next()) {
+	        int userID = rs.getInt("userID");
+	        String name = rs.getString("name");
+	        String district = rs.getString("district");
+	        String units = rs.getString("units");
+	        String dues = rs.getString("dues");
+	        String date = rs.getString("date");
+	        model power = new model(name, district, units);
+	        power.setId(userID);
+	        power.setdues(dues);
+	        power.setdate(date);
+	        billmodel.add(power);
+	      }
+	      con.close();
+
+	    } catch (Exception e) {
+	      return Response
+	        .status(Response.Status.INTERNAL_SERVER_ERROR)
+	        .entity(e)
+	        .build();
+	    }
+
+	    return Response
+	      .status(Response.Status.OK)
+	      .entity(billmodel)
+	      .build();
+
+	  }
+	  
+	 //Get Bill By ID
+
+	  public Response getPowerById(int powerId) {
+		  model billmodel = null;
+	    
+	    try {
+	      Connection con = connection.getConnection();
+	      if (con == null) return Response
+	        .status(Response.Status.INTERNAL_SERVER_ERROR)
+	        .entity("Database connectivity Error")
+	        .build();
+
+	      String query = "select * from power where userID = " + powerId;
+	      Statement stmt = con.createStatement();
+	      ResultSet rs = stmt.executeQuery(query);
+
+	      while (rs.next()) {
+	        int userID = rs.getInt("userID");
+	        String name = rs.getString("name");
+	        String district = rs.getString("district");
+	        String units = rs.getString("units");
+	        String dues = rs.getString("dues");
+	        String date = rs.getString("date");
+	        billmodel = new model(name, district, units);
+	        billmodel.setId(userID);
+	        billmodel.setdues(dues);
+	        billmodel.setdate(date);
+	      }
+	      con.close();
+
+	    } catch (Exception e) {
+	      return Response
+	        .status(Response.Status.INTERNAL_SERVER_ERROR)
+	        .entity(e)
+	        .build();
+	    }
+
+	    return Response
+	      .status(Response.Status.OK)
+	      .entity(billmodel)
+	      .build();
+
+	  }
+	  
+	  //Update Bill
+	  
+	  public Response updatebillModel(model billmodel) {
+		  try
+		  {
+			  Connection con = connection.getConnection();
+		      if (con == null) return Response
+		        .status(Response.Status.INTERNAL_SERVER_ERROR)
+		        .entity("Database connectivity Error")
+		        .build();
+		  
+		  String query = "UPDATE power SET name=?,district=?,units=?,dues=?,date=CURRENT_TIMESTAMP WHERE userID=?";
+		  PreparedStatement preparedStmt = con.prepareStatement(query);
+		  preparedStmt.setString(1, billmodel.getname());
+		  preparedStmt.setString(2, billmodel.getdistrict());
+		  preparedStmt.setString(3, billmodel.getunits());
+		  preparedStmt.setString(4, billmodel.getdues());
+		  preparedStmt.setString(5, billmodel.getdate());
+		  preparedStmt.setInt(6, billmodel.getId());
+		  
+		  preparedStmt.execute();
+		  con.close();
+		  billmodel.setdate("A few seconds ago");
+		  }
+		  catch (Exception e)
+		  {
+			  return Response
+				        .status(Response.Status.INTERNAL_SERVER_ERROR)
+				        .entity("Error when updating the power")
+				        .build();
+		  }
+		  
+		  return Response
+			      .status(Response.Status.CREATED)
+			      .entity(billmodel)
+			      .build();
+	  }
+	  
+	  // Delete Bill
+	  
+	  public Response deletePower(int userrId) {
+		  try
+		  {
+			  Connection con = connection.getConnection();
+		      if (con == null) return Response
+		        .status(Response.Status.INTERNAL_SERVER_ERROR)
+		        .entity("Database connectivity Error")
+		        .build();
+		  
+		  String query = "DELETE from power WHERE userID=?";
+		  PreparedStatement preparedStmt = con.prepareStatement(query);
+		 
+		  preparedStmt.setInt(1, userrId);
+		  
+		  preparedStmt.execute();
+		  con.close();
+
+		  }
+		  catch (Exception e)
+		  {
+			  return Response
+				        .status(Response.Status.INTERNAL_SERVER_ERROR)
+				        .entity("Error when deleting the power")
+				        .build();
+		  }
+		  
+		  return Response
+			      .status(Response.Status.OK)
+			      .entity("Succesfully Deleted the bill body")
+			      .build();
+	  }
+	  
+	  
+	  
+	}
+
+
+
