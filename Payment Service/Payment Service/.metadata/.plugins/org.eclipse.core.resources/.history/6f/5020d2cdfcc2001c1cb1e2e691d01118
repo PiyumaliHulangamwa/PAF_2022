@@ -1,0 +1,29 @@
+package com.piyumali.demorest;
+
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+
+
+@Path("/bills")
+public class controller {
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public model getmodel() {
+		
+		System.out.println("getmodel called");
+		model m1=new model();
+		m1.setUserID(1);
+		m1.setDate(2018-9-9);
+		m1.setDistrict("matale");
+		m1.setDues(400);
+		m1.setName("piyumali");
+		m1.setUnits(200);
+
+		
+		return m1;
+	}
+	
+}

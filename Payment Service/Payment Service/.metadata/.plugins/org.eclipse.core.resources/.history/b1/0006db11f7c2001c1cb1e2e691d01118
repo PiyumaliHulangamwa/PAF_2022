@@ -1,0 +1,50 @@
+package com.piyumali.demorest;
+
+
+public class model {
+
+	private int userID;
+	private String name;
+	private String district;
+	private int units;
+	private int dues;
+	private int date;
+	public int getUserID() {
+		return userID;
+	}
+	public void setUserID(int userID) {
+		this.userID = userID;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getDistrict() {
+		return district;
+	}
+	public void setDistrict(String district) {
+		this.district = district;
+	}
+	public int getUnits() {
+		return units;
+	}
+	public void setUnits(int units) {
+		this.units = units;
+	}
+	public int getDues() {
+		return dues;
+	}
+	public void setDues(int dues) {
+		this.dues = dues;
+	}
+	public int getDate() {
+		return date;
+	}
+	public void setDate(int date) {
+		this.date = date;
+	}
+	
+	
+}

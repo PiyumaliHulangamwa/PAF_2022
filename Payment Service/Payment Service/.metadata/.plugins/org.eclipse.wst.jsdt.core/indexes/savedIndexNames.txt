@@ -1,0 +1,7 @@
+INDEX VERSION 1.4+D:\paf_2022\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+2350410011.index
+1852106560.index
+188421899.index
+2682143045.index
+694632094.index
+485739028.index
